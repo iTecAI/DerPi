@@ -1,4 +1,4 @@
-import time, pygame
+import time, pygame, sys, os, shutil
 
 pygame.init()
 screen = pygame.display.set_mode([480,320], pygame.NOFRAME)
@@ -52,14 +52,50 @@ pR = pygame.image.load('pointerR.png')
 pL = pygame.image.load('pointerL.png')
 pygame.mouse.set_visible(True)
 
-screen.blit(pR, (400, 110))
-screen.blit(pL, (30, 110))
-pygame.display.flip()
+apps = []
+for DIR in os.listdir('apps'):
+    df = open('apps\\' + DIR + '\\data.txt', 'r')
+    data = df.read().splitlines()
+    df.close()
+    apps.append({'path': 'apps\\' + DIR + '\\', 'icon': pygame.transform.scale(pygame.image.load('apps\\' + DIR + '\\icon.png'), (96, 96)), 'main': open('apps\\' + DIR + '\\main.py', 'r').read(), 'name': data[0]})
 
+main_font = pygame.font.Font('font_main.otf', 32)
+
+def launch(app):
+    pygame.quit()
+    os.chdir(app['path'])
+    exec(app['main'])
+    os.chdir('..\\..\\')
+    pygame.init()
+    screen = pygame.display.set_mode([480,320], pygame.NOFRAME)
+    pygame.display.flip()
+    pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+    apps = []
+    for DIR in os.listdir('apps'):
+        df = open('apps\\' + DIR + '\\data.txt', 'r')
+        data = df.read().splitlines()
+        df.close()
+        apps.append({'icon': pygame.transform.scale(pygame.image.load('apps\\' + DIR + '\\icon.png'), (96, 96)), 'main': open('apps\\' + DIR + '\\main.py', 'r').read(), 'name': data[0]})
+    return screen, apps
+
+curpos = 0
 while True:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.pos[0] >= 400 and event.pos[0] <= 450 and event.pos[1] >= 110 and event.pos[1] <= 210:
-                print('pr')
+                curpos += 1
+                if curpos == len(apps):
+                    curpos = 0
             if event.pos[0] >= 30 and event.pos[0] <= 80 and event.pos[1] >= 110 and event.pos[1] <= 210:
-                print('pl')
+                curpos -= 1
+                if curpos < 0:
+                    curpos = len(apps) - 1
+            if event.pos[0] >= 192 and event.pos[0] <= 288 and event.pos[1] >= 112 and event.pos[1] <= 208:
+                screen, apps = launch(apps[curpos])
+            print(curpos)
+    screen.fill([230,230,230])
+    screen.blit(pR, (400, 110))
+    screen.blit(pL, (30, 110))
+    screen.blit(apps[curpos]['icon'], (192, 112))
+    screen.blit(main_font.render(apps[curpos]['name'], True, (0,0,0)), (30, 280))
+    pygame.display.flip()
