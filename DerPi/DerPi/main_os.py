@@ -69,7 +69,8 @@ def launch(app):
     except SystemExit:
         pass
     os.chdir('..\\..\\')
-    pygame.init()
+    pygame.display.init()
+    pygame.font.init()
     screen = pygame.display.set_mode([480,320], pygame.NOFRAME)
     pygame.display.flip()
     pygame.mouse.set_cursor(*pygame.cursors.broken_x)
