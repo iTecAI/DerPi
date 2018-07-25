@@ -6,7 +6,7 @@ pygame.display.flip()
 
 pygame.mouse.set_cursor(*pygame.cursors.broken_x)
 pygame.mouse.set_visible(False)
-'''
+
 #run intro
 dpos = 0
 dlogo = pygame.image.load('derplogo.png')
@@ -47,7 +47,7 @@ for i in range(52):
 screen.fill([230,230,230])
 pygame.display.flip()
 #intro complete
-'''
+
 pR = pygame.image.load('pointerR.png')
 pL = pygame.image.load('pointerL.png')
 pygame.mouse.set_visible(True)
