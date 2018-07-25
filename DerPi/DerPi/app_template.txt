@@ -1,0 +1,29 @@
+#lib import
+import sys, os
+sys.path.append('..\\..\\')
+import derpapi
+import pygame
+
+RUN = False
+
+#screen init
+try:
+   pygame.init()
+except:
+   pygame.display.init()
+
+def main():
+    global RUN
+    #place main code here
+    screen = pygame.display.set_mode([480, 320], pygame.NOFRAME)
+    
+    try:
+        font = pygame.font.Font('..\\..\\font_main.otf', 32)
+    except:
+        font = pygame.font.Font('font_main.otf', 32)
+    RUN = True
+    while RUN:
+        pass
+
+main()
+pygame.display.quit()
