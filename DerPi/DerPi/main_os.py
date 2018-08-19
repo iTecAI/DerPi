@@ -1,12 +1,14 @@
-import time, pygame, sys, os, shutil
+import time, pygame, sys, os, shutil, derpapi
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,0)
 pygame.init()
 screen = pygame.display.set_mode([480,320], pygame.NOFRAME)
 pygame.display.flip()
 
-pygame.mouse.set_cursor(*pygame.cursors.broken_x)
-pygame.mouse.set_visible(False)
+derpapi.store('BOOT', data=time.time())
 
+pygame.mouse.set_cursor(*pygame.cursors.diamond)
+pygame.mouse.set_visible(False)
+'''
 #run intro
 dpos = 0
 dlogo = pygame.image.load('derplogo.png')
@@ -47,7 +49,7 @@ for i in range(52):
 screen.fill([230,230,230])
 pygame.display.flip()
 #intro complete
-
+'''
 pR = pygame.image.load('pointerR.png')
 pL = pygame.image.load('pointerL.png')
 pygame.mouse.set_visible(True)
@@ -68,12 +70,16 @@ def launch(app):
         exec(app['main'])
     except SystemExit:
         pass
+    except derpapi.EndApp:
+        pass
+    except derpapi.Shutdown: #shutdown
+        sys.exit(0)
     os.chdir('..\\..\\')
     pygame.display.init()
     pygame.font.init()
     screen = pygame.display.set_mode([480,320], pygame.NOFRAME)
     pygame.display.flip()
-    pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+    pygame.mouse.set_cursor(*pygame.cursors.diamond)
     apps = []
     for DIR in os.listdir('apps'):
         df = open('apps\\' + DIR + '\\data.txt', 'r')
@@ -96,14 +102,14 @@ while True:
                     curpos = len(apps) - 1
             if event.pos[0] >= 192 and event.pos[0] <= 288 and event.pos[1] >= 112 and event.pos[1] <= 208:
                 screen, apps = launch(apps[curpos])
-            print(curpos)
+            #print(curpos)
     screen.fill([230,230,230])
     screen.blit(pR, (400, 110))
     screen.blit(pL, (30, 110))
     screen.blit(apps[curpos]['icon'], (192, 112))
     try:
-        screen.blit(main_font.render(apps[curpos]['name'], True, (0,0,0)), (30, 280))
+        screen.blit(main_font.render(apps[curpos]['name'], True, (0,0,0)), (30, 260))
     except:
         main_font = pygame.font.Font('font_main.otf', 32)
-        screen.blit(main_font.render(apps[curpos]['name'] + ' ', True, (0,0,0)), (30, 280))
+        screen.blit(main_font.render(apps[curpos]['name'] + ' ', True, (0,0,0)), (30, 260))
     pygame.display.flip()
